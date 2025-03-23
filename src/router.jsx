@@ -4,30 +4,62 @@ import DashboardLayout from "./Layout/DashboardLayout";
 import LoginPage from "@/pages/LoginPage";
 import RegisterPage from "@/pages/RegisterPage";
 import HomePage from "@/pages/HomePage";
+import MainLayout from "./Layout/MainLayout";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/auth",
-    element: <AuthLayout />,
+    element: <MainLayout />,
     children: [
       {
-        path: "login",
-        element: <LoginPage />,
+        path: "/",
+        element: <HomePage />,
       },
       {
-        path: "register",
-        element: <RegisterPage />,
+        path: "/auth",
+        element: <AuthLayout />,
+        children: [
+          {
+            path: "login",
+            element: <LoginPage />,
+          },
+          {
+            path: "register",
+            element: <RegisterPage />,
+          },
+        ],
+      },
+      {
+        path: "/dashboard",
+        element: <DashboardLayout />,
       },
     ],
   },
-  {
-    path: "/dashboard",
-    element: <DashboardLayout />,
-  },
 ]);
+
+// const router = createBrowserRouter([
+//   {
+//     path: "/",
+//     element: <HomePage />,
+//   },
+//   {
+//     path: "/auth",
+//     element: <AuthLayout />,
+//     children: [
+//       {
+//         path: "login",
+//         element: <LoginPage />,
+//       },
+//       {
+//         path: "register",
+//         element: <RegisterPage />,
+//       },
+//     ],
+//   },
+//   {
+//     path: "/dashboard",
+//     element: <DashboardLayout />,
+//   },
+// ]);
 
 export default router;
