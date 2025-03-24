@@ -92,7 +92,7 @@ const LoginPage = () => {
                   to="/auth/register"
                   className="underline underline-offset-4"
                 >
-                  Sign up
+                  Register
                 </Link>
               </div>
             </form>

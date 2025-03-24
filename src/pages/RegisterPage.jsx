@@ -8,9 +8,39 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { register } from "@/http/api";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    address: "",
+  });
+
+  const { mutate: registerMutate } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: register,
+    onSuccess: () => {
+      console.log("Register Successful");
+      navigate("/auth/login");
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // console.log("RegisterData", registerData);
+
+    //: Make server call for register
+    await registerMutate(registerData);
+  };
+
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -22,7 +52,7 @@ const RegisterPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="name">Name</Label>
@@ -30,6 +60,10 @@ const RegisterPage = () => {
                     id="name"
                     type="text"
                     placeholder="Enter your name"
+                    value={registerData.name}
+                    onChange={(e) =>
+                      setRegisterData({ ...registerData, name: e.target.value })
+                    }
                     required
                   />
                 </div>
@@ -39,6 +73,13 @@ const RegisterPage = () => {
                     id="email"
                     type="email"
                     placeholder="m@example.com"
+                    value={registerData.email}
+                    onChange={(e) =>
+                      setRegisterData({
+                        ...registerData,
+                        email: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -48,6 +89,13 @@ const RegisterPage = () => {
                     id="phone"
                     type="text"
                     placeholder="Enter phone no here"
+                    value={registerData.phone}
+                    onChange={(e) =>
+                      setRegisterData({
+                        ...registerData,
+                        phone: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -57,6 +105,13 @@ const RegisterPage = () => {
                     id="password"
                     type="password"
                     placeholder="Enter password here"
+                    value={registerData.password}
+                    onChange={(e) =>
+                      setRegisterData({
+                        ...registerData,
+                        password: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
@@ -66,11 +121,18 @@ const RegisterPage = () => {
                     id="address"
                     type="text"
                     placeholder="Enter address here"
+                    value={registerData.address}
+                    onChange={(e) =>
+                      setRegisterData({
+                        ...registerData,
+                        address: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
                 <Button type="submit" className="w-full cursor-pointer">
-                  Login
+                  Register
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
