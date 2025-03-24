@@ -8,9 +8,34 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { login } from "@/http/api";
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const [loginData, setLoginData] = useState({ email: "", password: "" });
+  // NOTE: Instead of useState we can use useRef
+
+  //: Create the mutation for login
+  const { mutate: loginMutate } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: login,
+    onSuccess: () => {
+      console.log("Login Successfull.");
+      navigate("/");
+    },
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // console.log("LoginData: ", loginData);
+
+    //: Make server call for login
+    await loginMutate(loginData);
+  };
+
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
@@ -22,28 +47,40 @@ const LoginPage = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="email">Email</Label>
                   <Input
                     id="email"
                     type="email"
+                    value={loginData.email}
                     placeholder="m@example.com"
+                    onChange={(e) =>
+                      setLoginData({ ...loginData, email: e.target.value })
+                    }
                     required
                   />
                 </div>
                 <div className="grid gap-2">
                   <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <a
-                      href="#"
+                    <Link
+                      to="#"
                       className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                     >
                       Forgot your password?
-                    </a>
+                    </Link>
                   </div>
-                  <Input id="password" type="password" required />
+                  <Input
+                    id="password"
+                    type="password"
+                    value={loginData.password}
+                    onChange={(e) =>
+                      setLoginData({ ...loginData, password: e.target.value })
+                    }
+                    required
+                  />
                 </div>
                 <Button type="submit" className="w-full cursor-pointer">
                   Login
