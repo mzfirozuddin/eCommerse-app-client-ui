@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "@/http/api";
 
@@ -19,7 +20,7 @@ const LoginPage = () => {
   // NOTE: Instead of useState we can use useRef
 
   //: Create the mutation for login
-  const { mutate: loginMutate } = useMutation({
+  const { mutate: loginMutate, isPending } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
     onSuccess: () => {
@@ -44,6 +45,7 @@ const LoginPage = () => {
             <CardTitle className="text-2xl">Login</CardTitle>
             <CardDescription>
               Enter your email below to login to your account
+              {isPending && <div>Loading...</div>}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -82,8 +84,13 @@ const LoginPage = () => {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full cursor-pointer">
-                  Login
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isPending}
+                >
+                  {isPending && <LoaderCircle className="animate-spin" />}
+                  <span className="ml-2">Login</span>
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">

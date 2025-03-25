@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { register } from "@/http/api";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
@@ -24,7 +25,7 @@ const RegisterPage = () => {
     address: "",
   });
 
-  const { mutate: registerMutate } = useMutation({
+  const { mutate: registerMutate, isPending } = useMutation({
     mutationKey: ["register"],
     mutationFn: register,
     onSuccess: () => {
@@ -49,6 +50,7 @@ const RegisterPage = () => {
             <CardTitle className="text-2xl">Sign Up</CardTitle>
             <CardDescription>
               Enter your information to create your account
+              {isPending && <div>Submitting...</div>}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -131,8 +133,13 @@ const RegisterPage = () => {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full cursor-pointer">
-                  Register
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  disabled={isPending}
+                >
+                  {isPending && <LoaderCircle className="animate-spin" />}
+                  <span className="ml-2">Register</span>
                 </Button>
               </div>
               <div className="mt-4 text-center text-sm">
