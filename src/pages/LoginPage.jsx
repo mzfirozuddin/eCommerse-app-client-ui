@@ -20,7 +20,12 @@ const LoginPage = () => {
   // NOTE: Instead of useState we can use useRef
 
   //: Create the mutation for login
-  const { mutate: loginMutate, isPending } = useMutation({
+  const {
+    mutate: loginMutate,
+    isPending,
+    isError,
+    error,
+  } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
     onSuccess: () => {
@@ -46,6 +51,9 @@ const LoginPage = () => {
             <CardDescription>
               Enter your email below to login to your account
               {isPending && <div>Loading...</div>}
+              {isError && (
+                <div className="text-red-500 text-sm">{error.message}</div>
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent>

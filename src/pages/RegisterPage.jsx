@@ -25,7 +25,12 @@ const RegisterPage = () => {
     address: "",
   });
 
-  const { mutate: registerMutate, isPending } = useMutation({
+  const {
+    mutate: registerMutate,
+    isPending,
+    isError,
+    error,
+  } = useMutation({
     mutationKey: ["register"],
     mutationFn: register,
     onSuccess: () => {
@@ -51,6 +56,9 @@ const RegisterPage = () => {
             <CardDescription>
               Enter your information to create your account
               {isPending && <div>Submitting...</div>}
+              {isError && (
+                <div className="text-red-500 text-sm">{error.message}</div>
+              )}
             </CardDescription>
           </CardHeader>
           <CardContent>
