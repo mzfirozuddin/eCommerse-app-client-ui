@@ -18,3 +18,7 @@ export const login = (data) => {
 export const register = (data) => {
   return api.post("/api/auth/register", data);
 };
+
+export const self = () => {
+  return api.get("/api/auth/self");
+};

@@ -8,16 +8,27 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { LoaderCircle } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { login } from "@/http/api";
+import { login, self } from "@/http/api";
+import { useAuthStore } from "@/store";
 
 const LoginPage = () => {
+  const { setUser } = useAuthStore();
   const navigate = useNavigate();
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   // NOTE: Instead of useState we can use useRef
+
+  const { refetch } = useQuery({
+    queryKey: ["self"],
+    queryFn: async () => {
+      const { data } = await self();
+      return data;
+    },
+    enabled: false,
+  });
 
   //: Create the mutation for login
   const {
@@ -28,8 +39,12 @@ const LoginPage = () => {
   } = useMutation({
     mutationKey: ["login"],
     mutationFn: login,
-    onSuccess: () => {
+    onSuccess: async () => {
       console.log("Login Successfull.");
+      const selfData = await refetch();
+      // console.log("SelfData: ", selfData);
+      setUser(selfData.data);
+
       navigate("/");
     },
   });
